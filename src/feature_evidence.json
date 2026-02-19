@@ -1,0 +1,64 @@
+{
+  "kind": "feature_evidence_report",
+  "features": [
+    {
+      "featureId": "feature-add-comprehensive-error-logging-to-the-internet-identity-authentication-flow-to-capture-the-specific-failure-point-and-error-messages-when-login-attempts-fail",
+      "featureTitle": "Add comprehensive error logging to the Internet Identity authentication flow to capture the specific failure point and error messages when login attempts fail",
+      "files": [
+        "frontend/src/components/Header.tsx"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-4"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-verify-that-the-backend-canister-id-is-correctly-set-in-the-frontend-actor-initialization-and-matches-the-deployed-production-canister",
+      "featureTitle": "Verify that the backend canister ID is correctly set in the frontend actor initialization and matches the deployed production canister",
+      "files": [
+        "frontend/src/vite-env.d.ts"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-5"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-implement-fallback-error-handling-in-the-login-flow-that-displays-user-friendly-error-messages-when-internet-identity-authentication-fails-including-specific-guidance-for-common-failure-scenarios",
+      "featureTitle": "Implement fallback error handling in the login flow that displays user-friendly error messages when Internet Identity authentication fails, including specific guidance for common failure scenarios",
+      "files": [
+        "frontend/src/components/Header.tsx",
+        "frontend/src/pages/LandingPage.tsx",
+        "frontend/src/utils/errorHandling.ts"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-7"
+      ],
+      "confidence": "high"
+    }
+  ]
+}

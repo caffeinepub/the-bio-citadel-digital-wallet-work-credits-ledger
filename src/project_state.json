@@ -1,0 +1,77 @@
+{
+  "schemaVersion": "1.0.0",
+  "projectStateVersion": 5,
+  "summary": "Bio Citadel Network - a Work Credit issuance system with dashboard optimization and automated credit minting for verified work logs",
+  "architectural_notes": [
+    "Dashboard loading optimized in Version 11",
+    "Automated Work Credit issuance: mints credits to worker wallet when work logs are approved",
+    "Internet Identity authentication integration"
+  ],
+  "known_issues": [
+    "Internet Identity login not working"
+  ],
+  "isFixRequest": true,
+  "existing_features": [
+    {
+      "id": "feature-diagnose-and-fix-the-internet-identity-login-failure-that-is-preventing-users-from-authenticating",
+      "title": "Diagnose and fix the Internet Identity login failure that is preventing users from authenticating",
+      "reqIds": [
+        "REQ-1"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-verify-that-the-internet-identity-authclient-initialization-in-useinternetidentity-hook-is-correctly-configured-with-the-proper-derivationorigin-and-identity-provider-url-for-the-production-environment",
+      "title": "Verify that the Internet Identity AuthClient initialization in useInternetIdentity hook is correctly configured with the proper derivationOrigin and identity provider URL for the production environment",
+      "reqIds": [
+        "REQ-2"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-comprehensive-error-logging-to-the-internet-identity-authentication-flow-to-capture-the-specific-failure-point-and-error-messages-when-login-attempts-fail",
+      "title": "Add comprehensive error logging to the Internet Identity authentication flow to capture the specific failure point and error messages when login attempts fail",
+      "reqIds": [
+        "REQ-4"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-verify-that-the-backend-canister-id-is-correctly-set-in-the-frontend-actor-initialization-and-matches-the-deployed-production-canister",
+      "title": "Verify that the backend canister ID is correctly set in the frontend actor initialization and matches the deployed production canister",
+      "reqIds": [
+        "REQ-5"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-implement-fallback-error-handling-in-the-login-flow-that-displays-user-friendly-error-messages-when-internet-identity-authentication-fails-including-specific-guidance-for-common-failure-scenarios",
+      "title": "Implement fallback error handling in the login flow that displays user-friendly error messages when Internet Identity authentication fails, including specific guidance for common failure scenarios",
+      "reqIds": [
+        "REQ-7"
+      ],
+      "version": 1
+    }
+  ],
+  "new_feature_requests": [
+    {
+      "id": "AR-3",
+      "summary": "Ensure the backend canister ID is correctly configured in the frontend actor initialization for production deployment",
+      "reqIds": [
+        "REQ-3"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-6",
+      "summary": "Check that the Internet Identity provider URL in useInternetIdentity.ts is correctly configured for the production Internet Computer network (not local replica)",
+      "reqIds": [
+        "REQ-6"
+      ],
+      "status": "pending"
+    }
+  ],
+  "projectName": "Bio Citadel Network",
+  "clarification_mode": "instant",
+  "clarification_rounds": 0
+}

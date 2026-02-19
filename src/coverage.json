@@ -1,61 +1,57 @@
 {
   "kind": "coverage_report",
   "version": "1.0",
-  "generatedAt": "2026-02-19T11:19:43.809Z",
+  "generatedAt": "2026-02-19T11:28:38.279Z",
   "sources": {
     "buildRequest": true,
     "implementationPlan": true
   },
   "requirements": {
     "total": 4,
-    "implemented": 4,
+    "implemented": 2,
     "items": [
       {
-        "id": "REQ-10",
-        "summary": "Add detailed console logging in the Internet Identity authentication flow to capture the exact redirect URLs, identity provider configuration, and any error states during the authorization process",
+        "id": "REQ-12",
+        "summary": "Remove any hardcoded Internet Identity provider URLs from useInternetIdentity.ts and rely exclusively on the @dfinity/auth-client default configuration to ensure proper Internet Identity service discovery for the production environment",
+        "status": "missing",
+        "plannedFiles": [
+          "frontend/src/hooks/useInternetIdentity.tsx"
+        ],
+        "matchedFiles": []
+      },
+      {
+        "id": "REQ-13",
+        "summary": "Verify and correct the derivationOrigin configuration in useInternetIdentity.ts to match the exact production frontend canister URL format required by Internet Identity",
+        "status": "missing",
+        "plannedFiles": [
+          "frontend/src/hooks/useInternetIdentity.tsx"
+        ],
+        "matchedFiles": []
+      },
+      {
+        "id": "REQ-14",
+        "summary": "Add a pre-authentication validation check in the login flow that verifies the AuthClient configuration before initiating the login process and logs all configuration parameters including derivationOrigin, identityProvider, and maxTimeToLive",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/hooks/useInternetIdentity.ts",
-          "frontend/src/components/Header.tsx"
+          "frontend/src/hooks/useInternetIdentity.tsx",
+          "frontend/src/utils/authConfig.ts"
         ],
         "matchedFiles": [
-          "frontend/src/components/Header.tsx"
+          "frontend/src/utils/authConfig.ts"
         ]
       },
       {
-        "id": "REQ-11",
-        "summary": "Ensure the frontend deployment configuration correctly sets the Internet Identity canister ID and URL for the production Internet Computer network environment",
+        "id": "REQ-15",
+        "summary": "Implement an alternative authentication initialization approach that uses environment-specific configuration loading to ensure the correct Internet Identity settings are applied based on the deployment environment",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/hooks/useInternetIdentity.ts",
-          "frontend/src/vite-env.d.ts"
+          "frontend/src/vite-env.d.ts",
+          "frontend/src/utils/authConfig.ts",
+          "frontend/src/hooks/useInternetIdentity.tsx"
         ],
         "matchedFiles": [
-          "frontend/src/vite-env.d.ts"
-        ]
-      },
-      {
-        "id": "REQ-8",
-        "summary": "Investigate and fix the Internet Identity authorization flow that is redirecting to 'https://id.ai/#authorize' instead of completing authentication successfully",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/hooks/useInternetIdentity.ts",
-          "frontend/src/components/Header.tsx"
-        ],
-        "matchedFiles": [
-          "frontend/src/components/Header.tsx"
-        ]
-      },
-      {
-        "id": "REQ-9",
-        "summary": "Verify that the Internet Identity provider URL configuration in useInternetIdentity.ts uses the correct production Internet Identity service URL (https://identity.ic0.app) and not any test or incorrect domains like 'id.ai'",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/hooks/useInternetIdentity.ts",
-          "frontend/src/vite-env.d.ts"
-        ],
-        "matchedFiles": [
-          "frontend/src/vite-env.d.ts"
+          "frontend/src/vite-env.d.ts",
+          "frontend/src/utils/authConfig.ts"
         ]
       }
     ]
@@ -65,8 +61,7 @@
     "feature_evidence.json",
     "frontend-file-summaries.txt",
     "frontend-implementation-plan.json",
-    "frontend/src/components/Header.tsx",
-    "frontend/src/pages/LandingPage.tsx",
+    "frontend/src/utils/authConfig.ts",
     "frontend/src/vite-env.d.ts",
     "project_state.json",
     "scratch/component-selection.json",

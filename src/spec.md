@@ -1,12 +1,12 @@
 # Specification
 
 ## Summary
-**Goal:** Fix the Internet Identity authorization flow that is currently redirecting to an incorrect URL and preventing successful user authentication.
+**Goal:** Fix Internet Identity authentication by correcting configuration to use default service discovery and proper derivation origin for production deployment.
 
 **Planned changes:**
-- Verify and correct the Internet Identity provider URL configuration to use the production service (https://identity.ic0.app) instead of any incorrect domains like 'id.ai'
-- Add detailed console logging throughout the authentication flow to capture redirect URLs, configuration details, and error states
-- Ensure frontend deployment configuration properly sets Internet Identity canister ID and URL for production environment
-- Fix the authorization redirect issue so users can complete the login process successfully
+- Remove hardcoded Internet Identity provider URLs from authentication configuration to rely on @dfinity/auth-client defaults
+- Verify and correct derivationOrigin to match exact production frontend canister URL format
+- Add pre-authentication validation that logs configuration parameters (derivationOrigin, identityProvider, maxTimeToLive) before login attempts
+- Implement environment-specific configuration loading to apply correct Internet Identity settings based on deployment environment
 
-**User-visible outcome:** Users can successfully log in using Internet Identity without encountering redirect errors, and the authentication flow completes properly with the user's identity recognized by the application.
+**User-visible outcome:** Users can successfully authenticate with Internet Identity in production without being redirected to incorrect domains, with clear error messages if configuration issues occur.

@@ -1,91 +1,84 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Fix Internet Identity authorization redirect issue preventing login",
+  "title": "Fix Internet Identity Authentication Configuration",
   "requirements": [
     {
-      "id": "REQ-8",
-      "summary": "Investigate and fix the Internet Identity authorization flow that is redirecting to 'https://id.ai/#authorize' instead of completing authentication successfully",
+      "id": "REQ-12",
+      "summary": "Remove hardcoded Internet Identity provider URLs and use @dfinity/auth-client defaults",
       "acceptanceCriteria": [
-        "Users can click the login button and are redirected to the correct Internet Identity provider",
-        "After authenticating with Internet Identity, users are successfully redirected back to the application",
-        "The authentication flow completes without showing the 'id.ai/#authorize' URL",
-        "User identity is properly stored and the application recognizes the authenticated state"
+        "The identityProvider parameter in AuthClient.create() is removed or set to undefined",
+        "The auth-client library automatically discovers the correct Internet Identity service URL",
+        "No references to 'id.ai' or custom identity provider URLs remain in the authentication flow"
       ],
       "file_operations": [
         {
-          "path": "frontend/src/hooks/useInternetIdentity.ts",
+          "path": "frontend/src/hooks/useInternetIdentity.tsx",
           "operation": "modify",
-          "description": "Review and fix the AuthClient initialization to ensure the identityProvider parameter uses the correct production Internet Identity URL (https://identity.ic0.app) and verify the maxTimeToLive and derivationOrigin settings are correctly configured. Add detailed console logging to capture the exact redirect URLs and OAuth flow parameters during authentication."
-        },
-        {
-          "path": "frontend/src/components/Header.tsx",
-          "operation": "modify",
-          "description": "Enhance existing console logging in the login handler to capture the full error object details when login fails, including any redirect URL information that might indicate why 'id.ai' domain is appearing. Verify the component's error handling correctly processes Internet Identity errors."
+          "description": "Remove any hardcoded identityProvider URL parameter from the AuthClient.create() call and ensure it relies on the library's default configuration for Internet Identity service discovery. Verify the component's usage instructions before implementing."
         }
       ]
     },
     {
-      "id": "REQ-9",
-      "summary": "Verify that the Internet Identity provider URL configuration uses the correct production service URL (https://identity.ic0.app) and not any test or incorrect domains like 'id.ai'",
+      "id": "REQ-13",
+      "summary": "Correct derivationOrigin configuration for production frontend canister",
       "acceptanceCriteria": [
-        "The AuthClient is initialized with identityProvider set to 'https://identity.ic0.app' for production",
-        "No references to 'id.ai' domain exist in the authentication configuration",
-        "The derivationOrigin is correctly set to match the production application URL"
+        "The derivationOrigin uses the correct format for Internet Computer frontend canisters",
+        "The derivationOrigin matches the actual deployment URL where the application is hosted",
+        "Authentication completes successfully without redirecting to incorrect domains"
       ],
       "file_operations": [
         {
-          "path": "frontend/src/hooks/useInternetIdentity.ts",
+          "path": "frontend/src/hooks/useInternetIdentity.tsx",
           "operation": "modify",
-          "description": "Audit the AuthClient.create() call to ensure identityProvider is explicitly set to 'https://identity.ic0.app' and search for any hardcoded or environment-based references to 'id.ai' domain. Verify derivationOrigin matches the production application URL and remove any test domain references."
+          "description": "Update the derivationOrigin configuration in the login method to use the correct Internet Computer frontend canister URL format (https://<canister-id>.icp0.io or https://<canister-id>.ic0.app) based on the deployment environment. Ensure it matches the actual production deployment URL."
+        }
+      ]
+    },
+    {
+      "id": "REQ-14",
+      "summary": "Add pre-authentication validation and configuration logging",
+      "acceptanceCriteria": [
+        "Configuration parameters are logged to console before login attempts",
+        "Any misconfiguration is detected and reported with actionable error messages",
+        "Users receive clear feedback if the authentication system is not properly configured"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/hooks/useInternetIdentity.tsx",
+          "operation": "modify",
+          "description": "Add a validation function that logs all AuthClient configuration parameters (derivationOrigin, identityProvider, maxTimeToLive) to the console before initiating login. Include checks for common misconfigurations and provide clear error messages with actionable guidance if issues are detected."
         },
+        {
+          "path": "frontend/src/utils/authConfig.ts",
+          "operation": "create",
+          "description": "Create a utility module that provides configuration validation functions for Internet Identity authentication. Include functions to validate derivationOrigin format, check for environment-specific settings, and generate detailed diagnostic logs for troubleshooting authentication issues."
+        }
+      ]
+    },
+    {
+      "id": "REQ-15",
+      "summary": "Implement environment-specific authentication configuration loading",
+      "acceptanceCriteria": [
+        "Environment variables correctly distinguish between local development and production deployment",
+        "Production builds use production-appropriate Internet Identity configuration",
+        "Configuration loading is verified and logged during application initialization"
+      ],
+      "file_operations": [
         {
           "path": "frontend/src/vite-env.d.ts",
           "operation": "modify",
-          "description": "Review the VITE_INTERNET_IDENTITY_URL environment variable declaration to ensure it correctly types the expected production Internet Identity URL and does not allow or default to incorrect domains."
-        }
-      ]
-    },
-    {
-      "id": "REQ-10",
-      "summary": "Add detailed console logging in the Internet Identity authentication flow to capture the exact redirect URLs, identity provider configuration, and any error states during the authorization process",
-      "acceptanceCriteria": [
-        "Console logs show the configured identity provider URL before initiating login",
-        "Console logs capture the redirect URL parameters during the OAuth flow",
-        "Any errors during the AuthClient initialization or login process are logged with full details",
-        "Successful authentication completion is logged with confirmation"
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/hooks/useInternetIdentity.ts",
-          "operation": "modify",
-          "description": "Add comprehensive console logging statements throughout the authentication flow: log the configured identityProvider URL when AuthClient is created, log the login options before calling authClient.login(), log the redirect URL and any OAuth parameters during the authorization flow, log detailed error information including error type and message when login fails, and log successful authentication completion with the obtained identity principal."
+          "description": "Add TypeScript type definitions for new environment variables related to Internet Identity configuration, including VITE_DERIVATION_ORIGIN and VITE_AUTH_ENVIRONMENT to distinguish between development and production environments."
         },
         {
-          "path": "frontend/src/components/Header.tsx",
+          "path": "frontend/src/utils/authConfig.ts",
           "operation": "modify",
-          "description": "Enhance existing console logging to capture more granular details about the login/logout flow, including the loginStatus state transitions and any intermediate authentication states that might reveal redirect issues."
-        }
-      ]
-    },
-    {
-      "id": "REQ-11",
-      "summary": "Ensure the frontend deployment configuration correctly sets the Internet Identity canister ID and URL for the production Internet Computer network environment",
-      "acceptanceCriteria": [
-        "Environment variables for Internet Identity URL are correctly set during production build",
-        "The vite-env.d.ts declarations match the actual environment configuration",
-        "No local development URLs or incorrect domain references remain in production builds"
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/hooks/useInternetIdentity.ts",
-          "operation": "modify",
-          "description": "Review how environment variables (import.meta.env.VITE_INTERNET_IDENTITY_URL) are accessed and ensure proper fallback to the production Internet Identity URL (https://identity.ic0.app) if the environment variable is not set or contains an incorrect value. Add runtime validation to reject invalid URLs like 'id.ai'."
+          "description": "Add environment-specific configuration loading logic that reads from environment variables to determine the correct derivationOrigin and other authentication settings. Include logic to detect whether the app is running in local development or production deployment and apply appropriate configurations. Log the loaded configuration during application initialization for verification."
         },
         {
-          "path": "frontend/src/vite-env.d.ts",
+          "path": "frontend/src/hooks/useInternetIdentity.tsx",
           "operation": "modify",
-          "description": "Update TypeScript declarations to ensure VITE_INTERNET_IDENTITY_URL is properly typed and documented with the expected production URL format, making it clear that only official Internet Identity domains should be used."
+          "description": "Integrate the environment-specific configuration loader from authConfig.ts into the authentication flow. Use the loaded configuration when initializing AuthClient and logging in. Ensure all configuration parameters are logged for debugging and verification purposes."
         }
       ]
     }

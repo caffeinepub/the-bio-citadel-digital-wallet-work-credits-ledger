@@ -1,6 +1,6 @@
 {
   "schemaVersion": "1.0.0",
-  "projectStateVersion": 7,
+  "projectStateVersion": 9,
   "summary": "Bio Citadel Network - a Work Credit issuance system with dashboard optimization and automated credit minting for verified work logs",
   "architectural_notes": [
     "Dashboard loading optimized in Version 11",
@@ -8,7 +8,8 @@
     "Internet Identity authentication integration"
   ],
   "known_issues": [
-    "Internet Identity login still failing after Version 13 deployment - redirects to id.ai/#authorize"
+    "Internet Identity login still failing after Version 13 deployment - redirects to id.ai/#authorize",
+    "Version 14 deployment failed - Internet Identity login still not working"
   ],
   "isFixRequest": true,
   "existing_features": [
@@ -83,6 +84,22 @@
         "REQ-11"
       ],
       "version": 1
+    },
+    {
+      "id": "feature-add-a-pre-authentication-validation-check-in-the-login-flow-that-verifies-the-authclient-configuration-before-initiating-the-login-process-and-logs-all-configuration-parameters-including-derivationorigin-identityprovider-and-maxtimetolive",
+      "title": "Add a pre-authentication validation check in the login flow that verifies the AuthClient configuration before initiating the login process and logs all configuration parameters including derivationOrigin, identityProvider, and maxTimeToLive",
+      "reqIds": [
+        "REQ-14"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-implement-an-alternative-authentication-initialization-approach-that-uses-environment-specific-configuration-loading-to-ensure-the-correct-internet-identity-settings-are-applied-based-on-the-deployment-environment",
+      "title": "Implement an alternative authentication initialization approach that uses environment-specific configuration loading to ensure the correct Internet Identity settings are applied based on the deployment environment",
+      "reqIds": [
+        "REQ-15"
+      ],
+      "version": 1
     }
   ],
   "new_feature_requests": [
@@ -99,6 +116,22 @@
       "summary": "Check that the Internet Identity provider URL in useInternetIdentity.ts is correctly configured for the production Internet Computer network (not local replica)",
       "reqIds": [
         "REQ-6"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-7",
+      "summary": "Remove any hardcoded Internet Identity provider URLs from useInternetIdentity.ts and rely exclusively on the @dfinity/auth-client default configuration to ensure proper Internet Identity service discovery for the production environment",
+      "reqIds": [
+        "REQ-12"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-8",
+      "summary": "Verify and correct the derivationOrigin configuration in useInternetIdentity.ts to match the exact production frontend canister URL format required by Internet Identity",
+      "reqIds": [
+        "REQ-13"
       ],
       "status": "pending"
     }

@@ -1,12 +1,12 @@
 # Specification
 
 ## Summary
-**Goal:** Diagnose and resolve Internet Identity login failures by adding comprehensive error logging and verifying configuration settings.
+**Goal:** Fix the Internet Identity authorization flow that is currently redirecting to an incorrect URL and preventing successful user authentication.
 
 **Planned changes:**
-- Add detailed error logging throughout the Internet Identity authentication flow to capture failure points and error messages
-- Verify backend canister ID configuration in actor initialization matches the deployed production canister
-- Check that Internet Identity provider URL is correctly configured for production (https://identity.ic0.app)
-- Implement user-friendly error messages and fallback handling for authentication failures
+- Verify and correct the Internet Identity provider URL configuration to use the production service (https://identity.ic0.app) instead of any incorrect domains like 'id.ai'
+- Add detailed console logging throughout the authentication flow to capture redirect URLs, configuration details, and error states
+- Ensure frontend deployment configuration properly sets Internet Identity canister ID and URL for production environment
+- Fix the authorization redirect issue so users can complete the login process successfully
 
-**User-visible outcome:** Users will see clear, actionable error messages when login attempts fail, and the development team will have detailed logs to diagnose the root cause of authentication issues.
+**User-visible outcome:** Users can successfully log in using Internet Identity without encountering redirect errors, and the authentication flow completes properly with the user's identity recognized by the application.

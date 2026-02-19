@@ -2,8 +2,8 @@
   "kind": "feature_evidence_report",
   "features": [
     {
-      "featureId": "feature-add-comprehensive-error-logging-to-the-internet-identity-authentication-flow-to-capture-the-specific-failure-point-and-error-messages-when-login-attempts-fail",
-      "featureTitle": "Add comprehensive error logging to the Internet Identity authentication flow to capture the specific failure point and error messages when login attempts fail",
+      "featureId": "feature-investigate-and-fix-the-internet-identity-authorization-flow-that-is-redirecting-to-https-id-ai-authorize-instead-of-completing-authentication-successfully",
+      "featureTitle": "Investigate and fix the Internet Identity authorization flow that is redirecting to 'https://id.ai/#authorize' instead of completing authentication successfully",
       "files": [
         "frontend/src/components/Header.tsx"
       ],
@@ -16,13 +16,13 @@
         "github-export-icp-cli@1.0.0"
       ],
       "testIds": [
-        "REQ-4"
+        "REQ-8"
       ],
       "confidence": "high"
     },
     {
-      "featureId": "feature-verify-that-the-backend-canister-id-is-correctly-set-in-the-frontend-actor-initialization-and-matches-the-deployed-production-canister",
-      "featureTitle": "Verify that the backend canister ID is correctly set in the frontend actor initialization and matches the deployed production canister",
+      "featureId": "feature-verify-that-the-internet-identity-provider-url-configuration-in-useinternetidentity-ts-uses-the-correct-production-internet-identity-service-url-https-identity-ic0-app-and-not-any-test-or-incorrect-domains-like-id-ai",
+      "featureTitle": "Verify that the Internet Identity provider URL configuration in useInternetIdentity.ts uses the correct production Internet Identity service URL (https://identity.ic0.app) and not any test or incorrect domains like 'id.ai'",
       "files": [
         "frontend/src/vite-env.d.ts"
       ],
@@ -35,17 +35,15 @@
         "github-export-icp-cli@1.0.0"
       ],
       "testIds": [
-        "REQ-5"
+        "REQ-9"
       ],
       "confidence": "high"
     },
     {
-      "featureId": "feature-implement-fallback-error-handling-in-the-login-flow-that-displays-user-friendly-error-messages-when-internet-identity-authentication-fails-including-specific-guidance-for-common-failure-scenarios",
-      "featureTitle": "Implement fallback error handling in the login flow that displays user-friendly error messages when Internet Identity authentication fails, including specific guidance for common failure scenarios",
+      "featureId": "feature-add-detailed-console-logging-in-the-internet-identity-authentication-flow-to-capture-the-exact-redirect-urls-identity-provider-configuration-and-any-error-states-during-the-authorization-process",
+      "featureTitle": "Add detailed console logging in the Internet Identity authentication flow to capture the exact redirect URLs, identity provider configuration, and any error states during the authorization process",
       "files": [
-        "frontend/src/components/Header.tsx",
-        "frontend/src/pages/LandingPage.tsx",
-        "frontend/src/utils/errorHandling.ts"
+        "frontend/src/components/Header.tsx"
       ],
       "components": [
         "authorization@4.0.0",
@@ -56,7 +54,26 @@
         "github-export-icp-cli@1.0.0"
       ],
       "testIds": [
-        "REQ-7"
+        "REQ-10"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-ensure-the-frontend-deployment-configuration-correctly-sets-the-internet-identity-canister-id-and-url-for-the-production-internet-computer-network-environment",
+      "featureTitle": "Ensure the frontend deployment configuration correctly sets the Internet Identity canister ID and URL for the production Internet Computer network environment",
+      "files": [
+        "frontend/src/vite-env.d.ts"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-11"
       ],
       "confidence": "high"
     }

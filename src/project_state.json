@@ -1,6 +1,6 @@
 {
   "schemaVersion": "1.0.0",
-  "projectStateVersion": 5,
+  "projectStateVersion": 7,
   "summary": "Bio Citadel Network - a Work Credit issuance system with dashboard optimization and automated credit minting for verified work logs",
   "architectural_notes": [
     "Dashboard loading optimized in Version 11",
@@ -8,7 +8,7 @@
     "Internet Identity authentication integration"
   ],
   "known_issues": [
-    "Internet Identity login not working"
+    "Internet Identity login still failing after Version 13 deployment - redirects to id.ai/#authorize"
   ],
   "isFixRequest": true,
   "existing_features": [
@@ -49,6 +49,38 @@
       "title": "Implement fallback error handling in the login flow that displays user-friendly error messages when Internet Identity authentication fails, including specific guidance for common failure scenarios",
       "reqIds": [
         "REQ-7"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-investigate-and-fix-the-internet-identity-authorization-flow-that-is-redirecting-to-https-id-ai-authorize-instead-of-completing-authentication-successfully",
+      "title": "Investigate and fix the Internet Identity authorization flow that is redirecting to 'https://id.ai/#authorize' instead of completing authentication successfully",
+      "reqIds": [
+        "REQ-8"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-verify-that-the-internet-identity-provider-url-configuration-in-useinternetidentity-ts-uses-the-correct-production-internet-identity-service-url-https-identity-ic0-app-and-not-any-test-or-incorrect-domains-like-id-ai",
+      "title": "Verify that the Internet Identity provider URL configuration in useInternetIdentity.ts uses the correct production Internet Identity service URL (https://identity.ic0.app) and not any test or incorrect domains like 'id.ai'",
+      "reqIds": [
+        "REQ-9"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-detailed-console-logging-in-the-internet-identity-authentication-flow-to-capture-the-exact-redirect-urls-identity-provider-configuration-and-any-error-states-during-the-authorization-process",
+      "title": "Add detailed console logging in the Internet Identity authentication flow to capture the exact redirect URLs, identity provider configuration, and any error states during the authorization process",
+      "reqIds": [
+        "REQ-10"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-ensure-the-frontend-deployment-configuration-correctly-sets-the-internet-identity-canister-id-and-url-for-the-production-internet-computer-network-environment",
+      "title": "Ensure the frontend deployment configuration correctly sets the Internet Identity canister ID and URL for the production Internet Computer network environment",
+      "reqIds": [
+        "REQ-11"
       ],
       "version": 1
     }

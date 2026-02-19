@@ -1,31 +1,49 @@
 {
   "kind": "build_request",
-  "title": "Continue diagnosing and resolving Internet Identity login failure",
+  "title": "Fix Internet Identity authorization redirect issue preventing login",
   "projectName": "Bio Citadel Network",
   "priority": "high",
   "requirements": [
     {
-      "id": "REQ-4",
-      "text": "Add comprehensive error logging to the Internet Identity authentication flow to capture the specific failure point and error messages when login attempts fail",
+      "id": "REQ-8",
+      "text": "Investigate and fix the Internet Identity authorization flow that is redirecting to 'https://id.ai/#authorize' instead of completing authentication successfully",
       "target": "frontend",
       "source": {
         "messageIds": [
           "msg-latest"
         ],
         "quotes": [
-          "Not yet working"
+          "Sill not working https://id.ai/#authorize"
         ]
       },
       "acceptanceCriteria": [
-        "Console logs display detailed error information including error type, message, and stack trace",
-        "Authentication state transitions are logged (initialization, login attempt, success/failure)",
-        "AuthClient configuration parameters are logged on initialization",
-        "Any delegation-related errors are captured and displayed"
+        "Users can click the login button and are redirected to the correct Internet Identity provider",
+        "After authenticating with Internet Identity, users are successfully redirected back to the application",
+        "The authentication flow completes without showing the 'id.ai/#authorize' URL",
+        "User identity is properly stored and the application recognizes the authenticated state"
       ]
     },
     {
-      "id": "REQ-5",
-      "text": "Verify that the backend canister ID is correctly set in the frontend actor initialization and matches the deployed production canister",
+      "id": "REQ-9",
+      "text": "Verify that the Internet Identity provider URL configuration in useInternetIdentity.ts uses the correct production Internet Identity service URL (https://identity.ic0.app) and not any test or incorrect domains like 'id.ai'",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-latest"
+        ],
+        "quotes": [
+          "Sill not working https://id.ai/#authorize"
+        ]
+      },
+      "acceptanceCriteria": [
+        "The AuthClient is initialized with identityProvider set to 'https://identity.ic0.app' for production",
+        "No references to 'id.ai' domain exist in the authentication configuration",
+        "The derivationOrigin is correctly set to match the production application URL"
+      ]
+    },
+    {
+      "id": "REQ-10",
+      "text": "Add detailed console logging in the Internet Identity authentication flow to capture the exact redirect URLs, identity provider configuration, and any error states during the authorization process",
       "target": "frontend",
       "source": {
         "messageIds": [
@@ -33,14 +51,15 @@
         ]
       },
       "acceptanceCriteria": [
-        "The canister ID used in useActor.ts matches the actual deployed backend canister ID",
-        "Actor initialization does not fail due to invalid or missing canister ID",
-        "Console confirms successful actor creation with correct canister ID"
+        "Console logs show the configured identity provider URL before initiating login",
+        "Console logs capture the redirect URL parameters during the OAuth flow",
+        "Any errors during the AuthClient initialization or login process are logged with full details",
+        "Successful authentication completion is logged with confirmation"
       ]
     },
     {
-      "id": "REQ-6",
-      "text": "Check that the Internet Identity provider URL in useInternetIdentity.ts is correctly configured for the production Internet Computer network (not local replica)",
+      "id": "REQ-11",
+      "text": "Ensure the frontend deployment configuration correctly sets the Internet Identity canister ID and URL for the production Internet Computer network environment",
       "target": "frontend",
       "source": {
         "messageIds": [
@@ -48,38 +67,21 @@
         ]
       },
       "acceptanceCriteria": [
-        "Identity provider URL points to https://identity.ic0.app for production",
-        "No hardcoded localhost or local replica URLs remain in production build",
-        "AuthClient initializes with correct provider configuration"
-      ]
-    },
-    {
-      "id": "REQ-7",
-      "text": "Implement fallback error handling in the login flow that displays user-friendly error messages when Internet Identity authentication fails, including specific guidance for common failure scenarios",
-      "target": "frontend",
-      "source": {
-        "messageIds": [
-          "msg-latest"
-        ]
-      },
-      "acceptanceCriteria": [
-        "Toast notifications show clear error messages when login fails",
-        "Network errors display appropriate messaging suggesting users check connectivity",
-        "Configuration errors provide actionable troubleshooting steps",
-        "Users can retry login after viewing error messages"
+        "Environment variables for Internet Identity URL are correctly set during production build",
+        "The vite-env.d.ts declarations match the actual environment configuration",
+        "No local development URLs or incorrect domain references remain in production builds"
       ]
     }
   ],
   "constraints": [
-    "Do not modify the Internet Identity authentication hook structure in frontend/src/hooks/useInternetIdentity.ts beyond adding error logging and configuration fixes",
-    "Preserve existing actor initialization logic in frontend/src/hooks/useActor.ts",
-    "Maintain backward compatibility with existing user authentication flow"
+    "Do not modify the core authentication logic in frontend/src/hooks/useInternetIdentity.ts beyond fixing the configuration issue",
+    "Preserve all existing error handling and logging mechanisms already implemented",
+    "Do not change the backend canister or main.mo file"
   ],
   "nonGoals": [
-    "Reimplementing the entire authentication system",
-    "Adding alternative authentication methods beyond Internet Identity",
-    "Changing the backend authentication logic",
-    "Modifying the user profile setup modal behavior"
+    "Adding new authentication methods beyond Internet Identity",
+    "Modifying the user profile or wallet functionality",
+    "Changing the admin dashboard or ledger features"
   ],
   "imageRequirements": {
     "required": [],

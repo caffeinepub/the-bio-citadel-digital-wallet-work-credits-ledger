@@ -1,101 +1,91 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Continue diagnosing and resolving Internet Identity login failure",
+  "title": "Fix Internet Identity authorization redirect issue preventing login",
   "requirements": [
     {
-      "id": "REQ-4",
-      "summary": "Add comprehensive error logging to the Internet Identity authentication flow to capture the specific failure point and error messages when login attempts fail",
+      "id": "REQ-8",
+      "summary": "Investigate and fix the Internet Identity authorization flow that is redirecting to 'https://id.ai/#authorize' instead of completing authentication successfully",
       "acceptanceCriteria": [
-        "Console logs display detailed error information including error type, message, and stack trace",
-        "Authentication state transitions are logged (initialization, login attempt, success/failure)",
-        "AuthClient configuration parameters are logged on initialization",
-        "Any delegation-related errors are captured and displayed"
+        "Users can click the login button and are redirected to the correct Internet Identity provider",
+        "After authenticating with Internet Identity, users are successfully redirected back to the application",
+        "The authentication flow completes without showing the 'id.ai/#authorize' URL",
+        "User identity is properly stored and the application recognizes the authenticated state"
       ],
       "file_operations": [
         {
           "path": "frontend/src/hooks/useInternetIdentity.ts",
           "operation": "modify",
-          "description": "Add comprehensive console logging throughout the authentication flow: log AuthClient initialization with configuration parameters, log state transitions (initialization, login attempt, delegation check, success/failure), wrap all async operations in try-catch blocks that log error type, message, and stack trace, add logging for delegation validation including expiration checks, and log identity retrieval attempts with success/failure outcomes"
-        },
-        {
-          "path": "frontend/src/hooks/useActor.ts",
-          "operation": "modify",
-          "description": "Add logging for actor initialization including the canister ID being used, log identity state when creating the actor, add error logging with stack traces for any actor creation failures, and log successful actor creation with confirmation message"
+          "description": "Review and fix the AuthClient initialization to ensure the identityProvider parameter uses the correct production Internet Identity URL (https://identity.ic0.app) and verify the maxTimeToLive and derivationOrigin settings are correctly configured. Add detailed console logging to capture the exact redirect URLs and OAuth flow parameters during authentication."
         },
         {
           "path": "frontend/src/components/Header.tsx",
           "operation": "modify",
-          "description": "Add detailed error logging in the handleAuth function before showing toast notifications, log the full error object including stack trace when login fails, and ensure authentication state (isAuthenticated, loginStatus) is logged before and after authentication attempts"
+          "description": "Enhance existing console logging in the login handler to capture the full error object details when login fails, including any redirect URL information that might indicate why 'id.ai' domain is appearing. Verify the component's error handling correctly processes Internet Identity errors."
         }
       ]
     },
     {
-      "id": "REQ-5",
-      "summary": "Verify that the backend canister ID is correctly set in the frontend actor initialization and matches the deployed production canister",
+      "id": "REQ-9",
+      "summary": "Verify that the Internet Identity provider URL configuration uses the correct production service URL (https://identity.ic0.app) and not any test or incorrect domains like 'id.ai'",
       "acceptanceCriteria": [
-        "The canister ID used in useActor.ts matches the actual deployed backend canister ID",
-        "Actor initialization does not fail due to invalid or missing canister ID",
-        "Console confirms successful actor creation with correct canister ID"
+        "The AuthClient is initialized with identityProvider set to 'https://identity.ic0.app' for production",
+        "No references to 'id.ai' domain exist in the authentication configuration",
+        "The derivationOrigin is correctly set to match the production application URL"
       ],
       "file_operations": [
         {
-          "path": "frontend/src/hooks/useActor.ts",
+          "path": "frontend/src/hooks/useInternetIdentity.ts",
           "operation": "modify",
-          "description": "Add validation to check that VITE_BACKEND_CANISTER_ID environment variable is defined and non-empty before actor creation, log the canister ID being used during initialization for verification, add a clear error message if canister ID is missing or malformed, and confirm successful actor creation with the canister ID in console logs (already added in REQ-4)"
+          "description": "Audit the AuthClient.create() call to ensure identityProvider is explicitly set to 'https://identity.ic0.app' and search for any hardcoded or environment-based references to 'id.ai' domain. Verify derivationOrigin matches the production application URL and remove any test domain references."
         },
         {
           "path": "frontend/src/vite-env.d.ts",
-          "operation": "create",
-          "description": "Create TypeScript declaration file for Vite environment variables to ensure VITE_BACKEND_CANISTER_ID is properly typed and recognized, preventing compilation errors related to environment variable access"
+          "operation": "modify",
+          "description": "Review the VITE_INTERNET_IDENTITY_URL environment variable declaration to ensure it correctly types the expected production Internet Identity URL and does not allow or default to incorrect domains."
         }
       ]
     },
     {
-      "id": "REQ-6",
-      "summary": "Check that the Internet Identity provider URL in useInternetIdentity.ts is correctly configured for the production Internet Computer network (not local replica)",
+      "id": "REQ-10",
+      "summary": "Add detailed console logging in the Internet Identity authentication flow to capture the exact redirect URLs, identity provider configuration, and any error states during the authorization process",
       "acceptanceCriteria": [
-        "Identity provider URL points to https://identity.ic0.app for production",
-        "No hardcoded localhost or local replica URLs remain in production build",
-        "AuthClient initializes with correct provider configuration"
+        "Console logs show the configured identity provider URL before initiating login",
+        "Console logs capture the redirect URL parameters during the OAuth flow",
+        "Any errors during the AuthClient initialization or login process are logged with full details",
+        "Successful authentication completion is logged with confirmation"
       ],
       "file_operations": [
         {
           "path": "frontend/src/hooks/useInternetIdentity.ts",
           "operation": "modify",
-          "description": "Verify and log the identity provider URL being used during AuthClient initialization, ensure the identityProvider option correctly uses https://identity.ic0.app for production (not localhost or local replica URLs), add environment-based configuration that selects the correct provider URL based on build mode, and log the final provider configuration to console for verification (building on logging added in REQ-4)"
-        }
-      ]
-    },
-    {
-      "id": "REQ-7",
-      "summary": "Implement fallback error handling in the login flow that displays user-friendly error messages when Internet Identity authentication fails, including specific guidance for common failure scenarios",
-      "acceptanceCriteria": [
-        "Toast notifications show clear error messages when login fails",
-        "Network errors display appropriate messaging suggesting users check connectivity",
-        "Configuration errors provide actionable troubleshooting steps",
-        "Users can retry login after viewing error messages"
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/hooks/useInternetIdentity.ts",
-          "operation": "modify",
-          "description": "Add error classification logic that identifies common failure types (network errors, delegation errors, configuration errors, user cancellation), create helper function that maps error types to user-friendly messages with actionable guidance, ensure all error paths return structured error information that can be displayed in the UI, and maintain existing error throwing behavior while adding detailed error context"
+          "description": "Add comprehensive console logging statements throughout the authentication flow: log the configured identityProvider URL when AuthClient is created, log the login options before calling authClient.login(), log the redirect URL and any OAuth parameters during the authorization flow, log detailed error information including error type and message when login fails, and log successful authentication completion with the obtained identity principal."
         },
         {
           "path": "frontend/src/components/Header.tsx",
           "operation": "modify",
-          "description": "Enhance error handling in handleAuth function to display specific user-friendly error messages via toast notifications based on error type (network issues suggest checking connectivity, configuration errors provide troubleshooting steps, user cancellation shows informative message), ensure users can retry login after viewing error messages, and improve the existing error handling that already catches and logs errors"
-        },
+          "description": "Enhance existing console logging to capture more granular details about the login/logout flow, including the loginStatus state transitions and any intermediate authentication states that might reveal redirect issues."
+        }
+      ]
+    },
+    {
+      "id": "REQ-11",
+      "summary": "Ensure the frontend deployment configuration correctly sets the Internet Identity canister ID and URL for the production Internet Computer network environment",
+      "acceptanceCriteria": [
+        "Environment variables for Internet Identity URL are correctly set during production build",
+        "The vite-env.d.ts declarations match the actual environment configuration",
+        "No local development URLs or incorrect domain references remain in production builds"
+      ],
+      "file_operations": [
         {
-          "path": "frontend/src/pages/LandingPage.tsx",
+          "path": "frontend/src/hooks/useInternetIdentity.ts",
           "operation": "modify",
-          "description": "Enhance the existing login error handling in the handleLogin function to display more specific error messages via toast notifications, classify error types similar to Header component (network errors, configuration errors, delegation errors), provide actionable guidance for each error type, and ensure consistent error messaging across both login entry points"
+          "description": "Review how environment variables (import.meta.env.VITE_INTERNET_IDENTITY_URL) are accessed and ensure proper fallback to the production Internet Identity URL (https://identity.ic0.app) if the environment variable is not set or contains an incorrect value. Add runtime validation to reject invalid URLs like 'id.ai'."
         },
         {
-          "path": "frontend/src/utils/errorHandling.ts",
-          "operation": "create",
-          "description": "Create shared error handling utilities including an error classification function that identifies error types (network, configuration, delegation, user cancellation), a message mapping function that converts technical errors to user-friendly messages with troubleshooting guidance, and TypeScript types for structured error information to ensure consistent error handling across components"
+          "path": "frontend/src/vite-env.d.ts",
+          "operation": "modify",
+          "description": "Update TypeScript declarations to ensure VITE_INTERNET_IDENTITY_URL is properly typed and documented with the expected production URL format, making it clear that only official Internet Identity domains should be used."
         }
       ]
     }
